@@ -302,11 +302,6 @@ class Client {
      */
     protected function setEventsFromConfig(): void {
         $this->events = $this->config->get("events");
-        if(isset($config['events'])){
-            foreach($config['events'] as $section => $events) {
-                $this->events[$section] = array_merge($this->events[$section], $events);
-            }
-        }
     }
 
     /**
@@ -594,7 +589,7 @@ class Client {
      */
     public function getFolders(bool $hierarchical = true, ?string $parent_folder = null, bool $soft_fail = false): FolderCollection {
         $this->checkConnection();
-        $folders = FolderCollection::make([]);
+        $folders = new FolderCollection();
 
         $pattern = $parent_folder.($hierarchical ? '%' : '*');
         $items = $this->connection->folders('', $pattern)->validatedData();
@@ -640,7 +635,7 @@ class Client {
      */
     public function getFoldersWithStatus(bool $hierarchical = true, ?string $parent_folder = null, bool $soft_fail = false): FolderCollection {
         $this->checkConnection();
-        $folders = FolderCollection::make([]);
+        $folders = new FolderCollection();
 
         $pattern = $parent_folder.($hierarchical ? '%' : '*');
         $items = $this->connection->folders('', $pattern)->validatedData();

@@ -85,6 +85,21 @@ interface ProtocolInterface {
     public function logout(): Response;
 
     /**
+     * Get the current connection timeout
+     *
+     * @return int
+     */
+    public function getConnectionTimeout(): int;
+
+    /**
+     * Set the connection timeout
+     * @param int $connection_timeout
+     *
+     * @return $this
+     */
+    public function setConnectionTimeout(int $connection_timeout): self;
+
+    /**
      * Check if the current session is connected
      *
      * @return bool

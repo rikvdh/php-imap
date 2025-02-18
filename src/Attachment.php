@@ -130,7 +130,7 @@ class Attachment {
         $this->part_number = $part->part_number;
 
         if ($this->message->getClient()) {
-            $default_mask = $this->message->getClient()?->getDefaultAttachmentMask();
+            $default_mask = $this->message->getClient()->getDefaultAttachmentMask();
             if ($default_mask != null) {
                 $this->mask = $default_mask;
             }
@@ -178,12 +178,10 @@ class Attachment {
      * @param $name
      * @param $value
      *
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value) {
         $this->attributes[$name] = $value;
-
-        return $this->attributes[$name];
     }
 
     /**
@@ -224,7 +222,7 @@ class Attachment {
         $content = $this->part->content;
 
         $this->content_type = $this->part->content_type;
-        $this->content = $this->decoder->decode($content, $this->part->encoding);
+        $this->content = $this->decoder->decode($content, (string)$this->part->encoding);
 
         // Create a hash of the raw part - this can be used to identify the attachment in the message context. However,
         // it is not guaranteed to be unique and collisions are possible.
@@ -278,7 +276,7 @@ class Attachment {
             $this->filename = $this->hash;
         }
 
-        if (!$this->name && $this->filename != "") {
+        if (!$this->name) {
             $this->name = $this->filename;
         }
     }

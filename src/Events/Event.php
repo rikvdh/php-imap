@@ -23,6 +23,7 @@ abstract class Event {
      * Dispatch the event with the given arguments.
      */
     public static function dispatch(): Event {
+        // @phpstan-ignore-next-line
         return new static(func_get_args());
     }
 }

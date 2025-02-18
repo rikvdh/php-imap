@@ -54,7 +54,7 @@ abstract class Decoder implements DecoderInterface {
      * @param string|null $encoding
      * @return mixed
      */
-    public function decode(array|string|null $value, string $encoding = null): mixed {
+    public function decode(array|string|null $value, ?string $encoding = null): mixed {
         return $value;
     }
 
@@ -123,7 +123,7 @@ abstract class Decoder implements DecoderInterface {
      * Set the configuration used for decoding
      * @param array $config
      *
-     * @return Decoder
+     * @return $this
      */
     public function setOptions(array $config): static {
         $this->options = $config;
@@ -152,7 +152,7 @@ abstract class Decoder implements DecoderInterface {
      * Set the fallback encoding
      *
      * @param string $fallback_encoding
-     * @return Decoder
+     * @return $this
      */
     public function setFallbackEncoding(string $fallback_encoding): static {
         $this->fallback_encoding = $fallback_encoding;

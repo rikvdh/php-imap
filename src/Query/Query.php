@@ -318,7 +318,7 @@ class Query {
             if ($available_messages->count() > 0) {
                 return $this->populate($available_messages);
             }
-            return MessageCollection::make();
+            return new MessageCollection();
         } catch (Exception $e) {
             throw new GetMessagesFailedException($e->getMessage(), 0, $e);
         }
