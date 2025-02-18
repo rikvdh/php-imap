@@ -20,6 +20,10 @@ use Illuminate\Pagination\Paginator;
  * Class PaginatedCollection
  *
  * @package Webklex\PHPIMAP\Support
+ *
+ * @template TKey of array-key
+ * @template-covariant TValue
+ * @extends Collection<TKey, TValue>
  */
 class PaginatedCollection extends Collection {
 
@@ -68,7 +72,7 @@ class PaginatedCollection extends Collection {
 
     /**
      * Get and set the total amount
-     * @param null $total
+     * @param int|null $total
      *
      * @return int|null
      */

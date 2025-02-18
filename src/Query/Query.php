@@ -986,7 +986,7 @@ class Query {
 
     /**
      * Set soft fail mode
-     * @var boolean $state
+     * @param boolean $state
      *
      * @return $this
      */
@@ -997,7 +997,7 @@ class Query {
     /**
      * Set soft fail mode
      *
-     * @var boolean $state
+     * @param boolean $state
      * @return $this
      */
     public function setSoftFail(bool $state = true): static {
@@ -1039,7 +1039,7 @@ class Query {
 
     /**
      * Check if there are any errors / exceptions present
-     * @var ?integer $uid
+     * @param ?integer $uid
      *
      * @return boolean
      */
@@ -1052,7 +1052,7 @@ class Query {
 
     /**
      * Check if there is an error / exception present
-     * @var integer $uid
+     * @param integer $uid
      *
      * @return boolean
      */
@@ -1080,7 +1080,7 @@ class Query {
 
     /**
      * Get a specific error / exception
-     * @var integer $uid
+     * @param integer $uid
      *
      * @return Exception|null
      */
@@ -1090,7 +1090,7 @@ class Query {
 
     /**
      * Get a specific error / exception
-     * @var integer $uid
+     * @param integer $uid
      *
      * @return ?Exception
      */

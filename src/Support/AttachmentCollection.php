@@ -12,14 +12,13 @@
 
 namespace Webklex\PHPIMAP\Support;
 
-use Illuminate\Support\Collection;
 use Webklex\PHPIMAP\Attachment;
 
 /**
  * Class AttachmentCollection
  *
  * @package Webklex\PHPIMAP\Support
- * @implements Collection<int, Attachment>
+ * @extends PaginatedCollection<int, Attachment>
  */
 class AttachmentCollection extends PaginatedCollection {
 
