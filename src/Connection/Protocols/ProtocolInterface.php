@@ -92,6 +92,21 @@ interface ProtocolInterface {
     public function connected(): bool;
 
     /**
+     * Get the next line from stream
+     *
+     * @return string next line
+     * @throws RuntimeException
+     */
+    public function nextLine(Response $response): string;
+
+    /**
+     * Reset the current stream and uid cache
+     *
+     * @return void
+     */
+    public function reset(): void;
+
+    /**
      * Get an array of available capabilities
      *
      * @return Response containing a list of capabilities
@@ -162,7 +177,7 @@ interface ProtocolInterface {
      * @throws RuntimeException
      */
     public function flags(int|array $uids, int|string $uid = IMAP::ST_UID): Response;
-    
+
     /**
      * Fetch message sizes
      * @param int|array $uids

@@ -454,7 +454,7 @@ class Query {
      * Get a new Message instance
      * @param int $uid
      * @param null $msglist
-     * @param null $sequence
+     * @param null|int $sequence
      *
      * @return Message
      * @throws AuthFailedException
