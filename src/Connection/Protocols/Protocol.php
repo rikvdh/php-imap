@@ -246,10 +246,6 @@ abstract class Protocol implements ProtocolInterface {
             stream_context_create($this->defaultSocketOptions($transport))
         );
 
-        if (!$stream) {
-            throw new ConnectionFailedException($errstr, $errno);
-        }
-
         if (false === stream_set_timeout($stream, $timeout)) {
             throw new ConnectionFailedException('Failed to set stream timeout');
         }
