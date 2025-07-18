@@ -37,7 +37,7 @@ class Header {
     /**
      * Attribute holder
      *
-     * @var Attribute[]|array $attributes
+     * @var Attribute[]|string[][]|string[] $attributes
      */
     protected array $attributes = [];
 

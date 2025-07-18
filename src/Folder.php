@@ -453,10 +453,12 @@ class Folder {
             try {
                 // This polymorphic call is fine - Protocol::idle() will throw an exception beforehand
                 $line = $idle_client->getConnection()->nextLine(Response::empty());
-            } catch (Exceptions\RuntimeException $e) {
-                if(strpos($e->getMessage(), "empty response") !== false && $idle_client->getConnection()->connected()) {
+            } catch (Exceptions\EmptyResponseException $e) {
+                if ($idle_client->getConnection()->connected()) {
                     continue;
                 }
+                throw $e;
+            } catch (Exceptions\RuntimeException $e) {
                 if(!str_contains($e->getMessage(), "connection closed")) {
                     throw $e;
                 }

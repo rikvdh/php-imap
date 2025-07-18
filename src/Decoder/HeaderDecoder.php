@@ -21,7 +21,7 @@ use Webklex\PHPIMAP\EncodingAliases;
  */
 class HeaderDecoder extends Decoder {
 
-    public function decode(array|string|null $value, ?string $encoding = null): mixed {
+    public function decode(array|string|null $value, ?int $encoding = null): mixed {
         if (is_array($value)) {
             return $this->decodeHeaderArray($value);
         }
@@ -65,13 +65,13 @@ class HeaderDecoder extends Decoder {
      * @return string
      */
     public function getEncoding(object|string $structure): string {
-        if (property_exists($structure, 'parameters')) {
+        if (is_object($structure) && property_exists($structure, 'parameters')) {
             foreach ($structure->parameters as $parameter) {
                 if (strtolower($parameter->attribute) == "charset") {
                     return EncodingAliases::get($parameter->value == "default" ? EncodingAliases::detectEncoding($parameter->value) : $parameter->value, $this->fallback_encoding);
                 }
             }
-        } elseif (property_exists($structure, 'charset')) {
+        } elseif (is_object($structure) && property_exists($structure, 'charset')) {
             return EncodingAliases::get($structure->charset == "default" ? EncodingAliases::detectEncoding($structure->charset) : $structure->charset, $this->fallback_encoding);
         } elseif (is_string($structure) === true) {
             $result = mb_detect_encoding($structure);

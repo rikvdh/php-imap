@@ -237,16 +237,17 @@ class Query {
 
         $uids = $available_messages->forPage($this->page, $this->limit)->toArray();
         $extensions = $this->getExtensions();
-        if (empty($extensions) === false && method_exists($this->client->getConnection(), "fetch")) {
+        $connection = $this->client->getConnection();
+        if (empty($extensions) === false && method_exists($connection, "fetch")) {
             // this polymorphic call is fine - the method exists at this point
-            $extensions = $this->client->getConnection()->fetch($extensions, $uids, null, $this->sequence)->validatedData();
+            $extensions = $connection->fetch($extensions, $uids, null, $this->sequence)->validatedData();
         }
-        $flags = $this->client->getConnection()->flags($uids, $this->sequence)->validatedData();
-        $headers = $this->client->getConnection()->headers($uids, "RFC822", $this->sequence)->validatedData();
+        $flags = $connection->flags($uids, $this->sequence)->validatedData();
+        $headers = $connection->headers($uids, "RFC822", $this->sequence)->validatedData();
 
         $contents = [];
         if ($this->getFetchBody()) {
-            $contents = $this->client->getConnection()->content($uids, $this->client->rfc, $this->sequence)->validatedData();
+            $contents = $connection->content($uids, $this->client->rfc, $this->sequence)->validatedData();
         }
 
         return [
@@ -340,7 +341,7 @@ class Query {
      * @throws ResponseException
      */
     protected function populate(Collection $available_messages): MessageCollection {
-        $messages = MessageCollection::make();
+        $messages = new MessageCollection();
         $config = $this->client->getConfig();
 
         $messages->total($available_messages->count());
@@ -361,7 +362,7 @@ class Query {
             }
             if ($message !== null) {
                 $key = $this->getMessageKey($message_key, $msglist, $message);
-                $messages->put("$key", $message);
+                $messages->put($key, $message);
             }
             $msglist++;
         }
@@ -428,7 +429,7 @@ class Query {
     /**
      * Paginate the current query
      * @param int $per_page Results you which to receive per page
-     * @param null $page The current page you are on (e.g. 0, 1, 2, ...) use `null` to enable auto mode
+     * @param ?int $page The current page you are on (e.g. 0, 1, 2, ...) use `null` to enable auto mode
      * @param string $page_name The page name / uri parameter used for the generated links and the auto mode
      *
      * @return LengthAwarePaginator
@@ -439,7 +440,7 @@ class Query {
      * @throws ResponseException
      */
     public function paginate(int $per_page = 5, $page = null, string $page_name = 'imap_page'): LengthAwarePaginator {
-        if ($page === null && isset($_GET[$page_name]) && $_GET[$page_name] > 0) {
+        if ($page === null && isset($_GET[$page_name]) && ((int)$_GET[$page_name]) > 0) {
             $this->page = intval($_GET[$page_name]);
         } elseif ($page > 0) {
             $this->page = (int)$page;

@@ -188,7 +188,7 @@ class Response {
 
     /**
      * Set the response
-     * @param array $response
+     * @param array|string $response
      *
      * @return Response
      */

@@ -187,10 +187,8 @@ class Message {
      */
     public array $bodies = [];
 
-    /** @var AttachmentCollection $attachments */
     public AttachmentCollection $attachments;
 
-    /** @var FlagCollection $flags */
     public FlagCollection $flags;
 
     /**
@@ -267,8 +265,6 @@ class Message {
      * @param string $raw_header
      * @param string $raw_body
      * @param array $raw_flags
-     * @param null $fetch_options
-     * @param null $sequence
      *
      * @return Message
      * @throws AuthFailedException
@@ -283,7 +279,7 @@ class Message {
      * @throws RuntimeException
      * @throws ResponseException
      */
-    public static function make(int $uid, ?int $msglist, Client $client, string $raw_header, string $raw_body, array $raw_flags, $fetch_options = null, $sequence = null): Message {
+    public static function make(int $uid, ?int $msglist, Client $client, string $raw_header, string $raw_body, array $raw_flags, ?int $fetch_options = null, ?int $sequence = null): Message {
         $reflection = new ReflectionClass(self::class);
         /** @var Message $instance */
         $instance = $reflection->newInstanceWithoutConstructor();
@@ -485,7 +481,8 @@ class Message {
                 $this->attributes[$name] = $this->client->getConnection()->getUid($this->msgn)->validate()->integer();
                 return $this->attributes[$name];
             case "msgn":
-                $this->attributes[$name] = $this->client->getConnection()->getMessageNumber($this->uid)->validate()->integer();
+                // FIXME is uid always int?
+                $this->attributes[$name] = $this->client->getConnection()->getMessageNumber((string)$this->uid)->validate()->integer();
                 return $this->attributes[$name];
             case "size":
                 if (!isset($this->attributes[$name])) {
@@ -577,7 +574,7 @@ class Message {
      * @param array $raw_flags
      */
     public function parseRawFlags(array $raw_flags): void {
-        $this->flags = FlagCollection::make();
+        $this->flags = new FlagCollection();
 
         foreach ($raw_flags as $flag) {
             if (str_starts_with($flag, "\\")) {
@@ -604,7 +601,7 @@ class Message {
      */
     private function parseFlags(): void {
         $this->client->openFolder($this->folder_path);
-        $this->flags = FlagCollection::make();
+        $this->flags = new FlagCollection();
 
         $sequence_id = $this->getSequenceId();
         try {
@@ -804,14 +801,13 @@ class Message {
 
     /**
      * Fail proof setter for $fetch_option
-     * @param $option
      *
      * @return Message
      */
-    public function setFetchOption($option): Message {
-        if (is_long($option) === true) {
+    public function setFetchOption(?int $option): Message {
+        if (is_long($option)) {
             $this->fetch_options = $option;
-        } elseif (is_null($option) === true) {
+        } else {
             $config = $this->config->get('options.fetch', IMAP::FT_UID);
             $this->fetch_options = is_long($config) ? $config : 1;
         }
@@ -889,7 +885,8 @@ class Message {
     /**
      * Create a message thread based on the current message
      * @param Folder|null $sent_folder
-     * @param MessageCollection|null $thread
+     * @param-in MessageCollection|null $thread
+     * @param-out MessageCollection $thread
      * @param Folder|null $folder
      *
      * @return MessageCollection
@@ -903,11 +900,10 @@ class Message {
      * @throws ResponseException
      */
     public function thread(?Folder $sent_folder = null, ?MessageCollection &$thread = null, ?Folder $folder = null): MessageCollection {
-        $thread = $thread ?: MessageCollection::make();
-        $folder = $folder ?: $this->getFolder();
+        $thread = $thread ?? new MessageCollection();
+        $folder = $folder ?? $this->getFolder();
         $sent_folder = $sent_folder ?: $this->client->getFolderByPath($this->config->get("options.common_folders.sent", "INBOX/Sent"));
 
-        /** @var Message $message */
         foreach ($thread as $message) {
             if ($message->message_id->first() == $this->message_id->first()) {
                 return $thread;
@@ -1093,7 +1089,8 @@ class Message {
         if ($this->sequence === IMAP::ST_UID) {
             $sequence_id = $next_uid;
         } else {
-            $sequence_id = $this->client->getConnection()->getMessageNumber($next_uid)->validatedData();
+            // TODO why cast this? is message number always int?
+            $sequence_id = $this->client->getConnection()->getMessageNumber((string)$next_uid)->validatedData();
         }
 
         $message = $folder->query()->getMessage($sequence_id, null, $this->sequence);

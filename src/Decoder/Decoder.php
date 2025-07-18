@@ -50,11 +50,9 @@ abstract class Decoder implements DecoderInterface {
 
     /**
      * Decode a given value
-     * @param array|string|null $value
-     * @param string|null $encoding
      * @return mixed
      */
-    public function decode(array|string|null $value, ?string $encoding = null): mixed {
+    public function decode(array|string|null $value, ?int $encoding = null): mixed {
         return $value;
     }
 

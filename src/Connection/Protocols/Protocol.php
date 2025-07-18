@@ -236,7 +236,7 @@ abstract class Protocol implements ProtocolInterface {
      * @param int $port of IMAP server, default is 143 (993 for ssl)
      * @param int $timeout timeout in seconds for initiating session
      *
-     * @return resource The socket created.
+     * @return resource|false The socket created.
      * @throws ConnectionFailedException
      */
     public function createStream($transport, string $host, int $port, int $timeout) {

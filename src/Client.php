@@ -42,9 +42,9 @@ class Client {
     /**
      * Connection resource
      *
-     * @var ?ProtocolInterface
+     * @var ImapProtocol|LegacyProtocol|null
      */
-    public ?ProtocolInterface $connection = null;
+    public ImapProtocol|LegacyProtocol|null $connection = null;
 
     /**
      * Client configuration

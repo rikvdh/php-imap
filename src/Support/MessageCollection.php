@@ -18,7 +18,7 @@ use Webklex\PHPIMAP\Message;
  * Class MessageCollection
  *
  * @package Webklex\PHPIMAP\Support
- * @extends PaginatedCollection<int, Message>
+ * @extends PaginatedCollection<string, Message>
  */
 class MessageCollection extends PaginatedCollection {
 

@@ -23,7 +23,7 @@ use Webklex\PHPIMAP\IMAP;
  */
 class MessageDecoder extends Decoder {
 
-    public function decode(array|string|null $value, ?string $encoding = null): mixed {
+    public function decode(array|string|null $value, ?int $encoding = null): mixed {
         if(is_array($value)) {
             return array_map(function($item){
                 return $this->decode($item);
@@ -55,13 +55,13 @@ class MessageDecoder extends Decoder {
      * @return string
      */
     public function getEncoding(object|string $structure): string {
-        if (property_exists($structure, 'parameters')) {
+        if (is_object($structure) && property_exists($structure, 'parameters')) {
             foreach ($structure->parameters as $parameter) {
                 if (strtolower($parameter->attribute) == "charset") {
                     return EncodingAliases::get($parameter->value, "ISO-8859-2");
                 }
             }
-        } elseif (property_exists($structure, 'charset')) {
+        } elseif (is_object($structure) && property_exists($structure, 'charset')) {
             return EncodingAliases::get($structure->charset, "ISO-8859-2");
         } elseif (is_string($structure) === true) {
             return EncodingAliases::detectEncoding($structure);

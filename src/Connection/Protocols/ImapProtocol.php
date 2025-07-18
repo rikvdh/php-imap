@@ -18,6 +18,7 @@ use Webklex\PHPIMAP\Config;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
 use Webklex\PHPIMAP\Exceptions\EmptyOffsetException;
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\ImapBadRequestException;
 use Webklex\PHPIMAP\Exceptions\ImapServerErrorException;
 use Webklex\PHPIMAP\Exceptions\InvalidMessageDateException;
@@ -133,12 +134,12 @@ class ImapProtocol extends Protocol {
      * Get the next line from stream
      *
      * @return string next line
-     * @throws RuntimeException
+     * @throws EmptyResponseException
      */
     public function nextLine(Response $response): string {
         $line = fgets($this->stream);
         if ($line === false || $line === '') {
-            throw new RuntimeException('empty response');
+            throw new EmptyResponseException();
         }
         $response->addResponse($line);
         if ($this->debug) echo "<< " . $line;
@@ -189,14 +190,14 @@ class ImapProtocol extends Protocol {
             list($tag, $line) = explode(' ', $line, 2);
         }
 
-        return $line ?? '';
+        return $line;
     }
 
     /**
      * Get the next line and split the tag
      * The server can send untagged status updates starting with '*', the untagged lines will be ignored.
      *
-     * @param string|null $tag reference tag
+     * @param-out string $tag reference tag
      *
      * @return string next line
      * @throws RuntimeException
@@ -286,6 +287,7 @@ class ImapProtocol extends Protocol {
                 $endPos = strpos($token, '}');
                 $chars = substr($token, 1, $endPos - 1);
                 if (is_numeric($chars)) {
+                    $chars = (int)$chars;
                     $token = '';
                     while (strlen($token) < $chars) {
                         $token .= $this->nextLine($response);

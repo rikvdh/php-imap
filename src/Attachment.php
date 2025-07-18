@@ -37,60 +37,48 @@ use Webklex\PHPIMAP\Support\Masks\AttachmentMask;
  * @property ?string $disposition
  * @property string $img_src
  *
- * @method integer getPartNumber()
+ * @method ?int getPartNumber()
  * @method integer setPartNumber(integer $part_number)
- * @method string  getContent()
+ * @method ?string  getContent()
  * @method string  setContent(string $content)
- * @method string  getType()
+ * @method ?string  getType()
  * @method string  setType(string $type)
- * @method string  getContentType()
+ * @method ?string  getContentType()
  * @method string  setContentType(string $content_type)
- * @method string  getId()
+ * @method ?string  getId()
  * @method string  setId(string $id)
- * @method string  getHash()
+ * @method ?string  getHash()
  * @method string  setHash(string $hash)
- * @method string  getSize()
+ * @method ?string  getSize()
  * @method string  setSize(integer $size)
- * @method string  getName()
- * @method string  getDisposition()
+ * @method ?string  getName()
+ * @method ?string  getDisposition()
  * @method string  setDisposition(string $disposition)
  * @method string  setImgSrc(string $img_src)
  */
 class Attachment {
 
-    /**
-     * @var Message $message
-     */
     protected Message $message;
 
     /**
      * Used config
-     *
-     * @var Config $config
      */
     protected Config $config;
 
     /**
      * Attachment options
-     *
-     * @var array $options
      */
     protected array $options = [];
 
-    /** @var Part $part */
     protected Part $part;
 
     /**
      * Decoder instance
-     *
-     * @var DecoderInterface $decoder
      */
     protected DecoderInterface $decoder;
 
     /**
      * Attribute holder
-     *
-     * @var array $attributes
      */
     protected array $attributes = [
         'content'      => null,
@@ -191,11 +179,7 @@ class Attachment {
      * @return mixed|null
      */
     public function __get($name) {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-
-        return null;
+        return $this->attributes[$name] ?? null;
     }
 
     /**
@@ -222,7 +206,7 @@ class Attachment {
         $content = $this->part->content;
 
         $this->content_type = $this->part->content_type;
-        $this->content = $this->decoder->decode($content, (string)$this->part->encoding);
+        $this->content = $this->decoder->decode($content, $this->part->encoding);
 
         // Create a hash of the raw part - this can be used to identify the attachment in the message context. However,
         // it is not guaranteed to be unique and collisions are possible.
@@ -351,16 +335,14 @@ class Attachment {
      */
     public function getExtension(): ?string {
         $extension = null;
-        $guesser = "\Symfony\Component\Mime\MimeTypes";
+        $guesser = "\\Symfony\\Component\\Mime\\MimeTypes";
         if (class_exists($guesser) !== false) {
-            /** @var Symfony\Component\Mime\MimeTypes $guesser */
             $extensions = $guesser::getDefault()->getExtensions($this->getMimeType());
             $extension = $extensions[0] ?? null;
         }
         if ($extension === null) {
-            $deprecated_guesser = "\Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser";
+            $deprecated_guesser = "\\Symfony\\Component\\HttpFoundation\\File\\MimeType\\ExtensionGuesser";
             if (class_exists($deprecated_guesser) !== false) {
-                /** @var \Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser $deprecated_guesser */
                 $extension = $deprecated_guesser::getInstance()->guess($this->getMimeType());
             }
         }

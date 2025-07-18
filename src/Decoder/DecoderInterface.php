@@ -29,11 +29,9 @@ interface DecoderInterface {
     /**
      * Decode a given value
      *
-     * @param array|string|null $value
-     * @param string|null $encoding
      * @return string|array|null
      */
-    public function decode(array|string|null $value, ?string $encoding = null): mixed;
+    public function decode(array|string|null $value, ?int $encoding = null): mixed;
 
     public function mimeHeaderDecode(string $text): array;
 
