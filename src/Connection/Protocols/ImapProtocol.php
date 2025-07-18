@@ -49,7 +49,7 @@ class ImapProtocol extends Protocol {
      */
     public function __construct(Config $config, bool $cert_validation = true, mixed $encryption = false) {
         $this->config = $config;
-        $this->setCertValidation($cert_validation);
+        $this->setCertValidation($cert_validation? 1 : 0);
         $this->encryption = $encryption;
     }
 

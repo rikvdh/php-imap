@@ -448,12 +448,13 @@ class Folder {
 
         $sequence = $this->client->getConfig()->get('options.sequence', IMAP::ST_MSGN);
 
+        // @phpstan-ignore-next-line
         while (true) {
             try {
                 // This polymorphic call is fine - Protocol::idle() will throw an exception beforehand
                 $line = $idle_client->getConnection()->nextLine(Response::empty());
             } catch (Exceptions\RuntimeException $e) {
-                if(strpos($e->getMessage(), "empty response") >= 0 && $idle_client->getConnection()->connected()) {
+                if(strpos($e->getMessage(), "empty response") !== false && $idle_client->getConnection()->connected()) {
                     continue;
                 }
                 if(!str_contains($e->getMessage(), "connection closed")) {
@@ -461,7 +462,7 @@ class Folder {
                 }
             }
 
-            if (($pos = strpos($line, "EXISTS")) !== false) {
+            if (isset($line) && ($pos = strpos($line, "EXISTS")) !== false) {
                 $msgn = (int)substr($line, 2, $pos - 2);
 
                 // Check if the stream is still alive or should be considered stale

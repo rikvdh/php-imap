@@ -19,7 +19,7 @@ namespace Webklex\PHPIMAP;
  * @package Webklex\PHPIMAP
  */
 class EncodingAliases {
-   
+
     /**
      * Contains email encoding mappings
      *
@@ -465,16 +465,16 @@ class EncodingAliases {
         "x-gbk"                    => "gbk",
         "windows-936"              => "gbk",
         "ansi-1251"                => "windows-1251",
-    ];        
-    
+    ];
+
     /**
      * Returns proper encoding mapping, if exists. If it doesn't, return unchanged $encoding
      * @param string|null $encoding
      * @param string|null $fallback
      *
-     * @return string
+     * @return string|null
      */
-    public static function get(?string $encoding, ?string $fallback = null): string {
+    public static function get(?string $encoding, ?string $fallback = null): ?string {
         if (isset(self::$aliases[strtolower($encoding ?? '')])) {
             return self::$aliases[strtolower($encoding ?? '')];
         }

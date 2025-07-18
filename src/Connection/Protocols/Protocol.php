@@ -128,12 +128,12 @@ abstract class Protocol implements ProtocolInterface {
 
     /**
      * Set SSL certificate validation
-     * @var int $cert_validation
+     * @param int $cert_validation
      *
      * @return Protocol
      */
     public function setCertValidation(int $cert_validation): Protocol {
-        $this->cert_validation = $cert_validation;
+        $this->cert_validation = !!$cert_validation;
         return $this;
     }
 
@@ -148,7 +148,7 @@ abstract class Protocol implements ProtocolInterface {
 
     /**
      * Set connection proxy settings
-     * @var array $options
+     * @param array $options
      *
      * @return Protocol
      */
@@ -173,7 +173,7 @@ abstract class Protocol implements ProtocolInterface {
 
     /**
      * Set SSL context options settings
-     * @var array $options
+     * @param array $options
      *
      * @return Protocol
      */
@@ -196,7 +196,7 @@ abstract class Protocol implements ProtocolInterface {
     /**
      * Prepare socket options
      * @return array
-     *@var string $transport
+     * @param string $transport
      *
      */
     private function defaultSocketOptions(string $transport): array {
@@ -245,10 +245,6 @@ abstract class Protocol implements ProtocolInterface {
             STREAM_CLIENT_CONNECT,
             stream_context_create($this->defaultSocketOptions($transport))
         );
-
-        if (!$stream) {
-            throw new ConnectionFailedException($errstr, $errno);
-        }
 
         if (false === stream_set_timeout($stream, $timeout)) {
             throw new ConnectionFailedException('Failed to set stream timeout');

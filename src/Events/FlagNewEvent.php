@@ -29,7 +29,7 @@ class FlagNewEvent extends Event {
 
     /**
      * Create a new event instance.
-     * @var array $arguments
+     * @param array $arguments
      *
      * @return void
      */

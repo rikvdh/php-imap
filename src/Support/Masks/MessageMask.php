@@ -29,7 +29,7 @@ class MessageMask extends Mask {
     /**
      * Get the message html body
      *
-     * @return null
+     * @return null|string
      */
     public function getHtmlBody(){
         $bodies = $this->parent->getBodies();
@@ -45,11 +45,11 @@ class MessageMask extends Mask {
 
     /**
      * Get the Message html body filtered by an optional callback
-     * @param callable|null $callback
+     * @param callable|string|null $callback
      *
      * @return string|null
      */
-    public function getCustomHTMLBody(?callable $callback = null): ?string {
+    public function getCustomHTMLBody(callable|string|null $callback = null): ?string {
         $body = $this->getHtmlBody();
         if($body === null) return null;
 

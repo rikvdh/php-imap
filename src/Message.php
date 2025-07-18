@@ -47,9 +47,9 @@ use Webklex\PHPIMAP\Traits\HasEvents;
  *
  * @package Webklex\PHPIMAP
  *
- * @property integer $msglist
- * @property integer $uid
- * @property integer $msgn
+ * @property ?integer $msglist
+ * @property ?integer $uid
+ * @property ?integer $msgn
  * @property integer $size
  * @property Attribute $subject
  * @property Attribute $message_id
@@ -395,8 +395,8 @@ class Message {
         $this->options = $this->config->get('options');
         $this->available_flags = $this->config->get('flags');
 
-        $this->attachments = AttachmentCollection::make();
-        $this->flags = FlagCollection::make();
+        $this->attachments = new AttachmentCollection();
+        $this->flags = new FlagCollection();
     }
 
     /**
@@ -423,7 +423,8 @@ class Message {
             $name = Str::snake(substr($method, 3));
 
             if (in_array($name, array_keys($this->attributes))) {
-                return $this->__set($name, array_pop($arguments));
+                $this->__set($name, array_pop($arguments));
+                return $this->get($name);
             }
 
         }
@@ -436,12 +437,10 @@ class Message {
      * @param $name
      * @param $value
      *
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value) {
         $this->attributes[$name] = $value;
-
-        return $this->attributes[$name];
     }
 
     /**

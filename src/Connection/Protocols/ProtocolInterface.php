@@ -85,11 +85,41 @@ interface ProtocolInterface {
     public function logout(): Response;
 
     /**
+     * Get the current connection timeout
+     *
+     * @return int
+     */
+    public function getConnectionTimeout(): int;
+
+    /**
+     * Set the connection timeout
+     * @param int $connection_timeout
+     *
+     * @return $this
+     */
+    public function setConnectionTimeout(int $connection_timeout): self;
+
+    /**
      * Check if the current session is connected
      *
      * @return bool
      */
     public function connected(): bool;
+
+    /**
+     * Get the next line from stream
+     *
+     * @return string next line
+     * @throws RuntimeException
+     */
+    public function nextLine(Response $response): string;
+
+    /**
+     * Reset the current stream and uid cache
+     *
+     * @return void
+     */
+    public function reset(): void;
 
     /**
      * Get an array of available capabilities
@@ -162,7 +192,7 @@ interface ProtocolInterface {
      * @throws RuntimeException
      */
     public function flags(int|array $uids, int|string $uid = IMAP::ST_UID): Response;
-    
+
     /**
      * Fetch message sizes
      * @param int|array $uids

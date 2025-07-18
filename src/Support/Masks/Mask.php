@@ -94,12 +94,10 @@ class Mask {
      * @param $name
      * @param $value
      *
-     * @return mixed
+     * @return void
      */
     public function __set($name, $value) {
         $this->attributes[$name] = $value;
-
-        return $this->attributes[$name];
     }
 
     /**
