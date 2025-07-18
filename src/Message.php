@@ -490,7 +490,9 @@ class Message {
                 }
                 return $this->attributes[$name];
         }
-
+        if (!$this->header) {
+            return null;
+        }
         return $this->header->get($name);
     }
 
@@ -667,7 +669,7 @@ class Message {
          if (!isset($sizes[$sequence_id])) {
             throw new MessageSizeFetchingException("sizes did not set an array entry for the supplied sequence_id", 0);
         }
-        $this->attributes["size"] = $sizes[$sequence_id];
+        $this->attributes["size"] = (int)$sizes[$sequence_id];
     }
 
     /**
@@ -741,7 +743,6 @@ class Message {
             $this->fetchAttachment($part);
         } else {
             $encoding = $this->decoder->getEncoding($part);
-
             $content = $this->decoder->decode($part->content, $part->encoding);
 
             // We don't need to do convertEncoding() if charset is ASCII (us-ascii):

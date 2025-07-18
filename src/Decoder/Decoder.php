@@ -85,6 +85,7 @@ abstract class Decoder implements DecoderInterface {
     public function mimeHeaderDecode(string $text): array {
         if (extension_loaded('imap')) {
             $result = \imap_mime_header_decode($text);
+            // FIXME this can throw errors for some headers.. check when this happens and call \imap_errors();
             return is_array($result) ? $result : [];
         }
         $charset = $this->getEncoding($text);
