@@ -17,6 +17,7 @@ use Throwable;
 use Webklex\PHPIMAP\Config;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\EmptyOffsetException;
 use Webklex\PHPIMAP\Exceptions\ImapBadRequestException;
 use Webklex\PHPIMAP\Exceptions\ImapServerErrorException;
 use Webklex\PHPIMAP\Exceptions\InvalidMessageDateException;
@@ -772,6 +773,8 @@ class ImapProtocol extends Protocol {
             $set = $from . ':' . $from;
         } elseif ($to == INF) {
             $set = $from . ':*';
+        } elseif (is_array($from)) {
+            throw new EmptyOffsetException();
         } else {
             $set = $from . ':' . (int)$to;
         }
