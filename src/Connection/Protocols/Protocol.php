@@ -39,7 +39,7 @@ abstract class Protocol implements ProtocolInterface {
     protected bool $enable_uid_cache = true;
 
     /**
-     * @var resource|mixed|boolean|null $stream
+     * @var resource|false $stream
      */
     public $stream = false;
 
@@ -409,5 +409,15 @@ abstract class Protocol implements ProtocolInterface {
      */
     public function getConfig(): Config {
         return $this->config;
+    }
+
+         /**
+     * Reset the current stream and uid cache
+     *
+     * @return void
+     */
+    public function reset(): void {
+        $this->stream = false;
+        $this->uid_cache = [];
     }
 }

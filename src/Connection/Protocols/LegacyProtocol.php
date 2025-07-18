@@ -12,9 +12,11 @@
 
 namespace Webklex\PHPIMAP\Connection\Protocols;
 
-use Webklex\PHPIMAP\ClientManager;
+use IMAP\Connection;
+use InvalidArgumentException;
 use Webklex\PHPIMAP\Config;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\ImapBadRequestException;
 use Webklex\PHPIMAP\Exceptions\MethodNotSupportedException;
 use Webklex\PHPIMAP\Exceptions\RuntimeException;
@@ -30,6 +32,11 @@ class LegacyProtocol extends Protocol {
     protected string $protocol = "imap";
     protected string $host = "localhost";
     protected int $port = 993;
+
+    /**
+     * @var Connection|false $stream
+     */
+    public $stream = false;
 
     /**
      * Imap constructor.
@@ -110,12 +117,7 @@ class LegacyProtocol extends Protocol {
                 }
             }
 
-            if ($this->stream !== false) {
-                return ["TAG" . $response->Noun() . " OK [] Logged in\r\n"];
-            }
-
-            $response->addError("failed to login");
-            return [];
+            return ["TAG" . $response->Noun() . " OK [] Logged in\r\n"];
         });
     }
 
@@ -402,6 +404,17 @@ class LegacyProtocol extends Protocol {
         });
     }
 
+
+    /**
+     * Get the next line from stream
+     *
+     * @return string next line
+     * @throws EmptyResponseException
+     */
+    public function nextLine(Response $response): string {
+        throw new InvalidArgumentException();
+    }
+
     /**
      * Get a message overview
      * @param string $sequence uid sequence
@@ -545,9 +558,9 @@ class LegacyProtocol extends Protocol {
      */
     public function copyManyMessages(array $messages, string $folder, int|string $uid = IMAP::ST_UID): Response {
         return $this->response()->wrap(function($response) use ($messages, $folder, $uid) {
-            /** @var Response $response */
             foreach ($messages as $msg) {
                 $copy_response = $this->copyMessage($folder, $msg, null, $uid);
+                /** @var Response $response */
                 $response->stack($copy_response);
                 if (empty($copy_response->data())) {
                     return [
@@ -693,9 +706,10 @@ class LegacyProtocol extends Protocol {
      */
     public function expunge(): Response {
         return $this->response("imap_expunge")->wrap(function($response) {
-            return \imap_expunge($this->stream) ? [
+            \imap_expunge($this->stream);
+            return [
                 0 => "TAG" . $response->Noun() . " OK Expunge completed (0.001 + 0.000 secs).\r\n",
-            ] : [];
+            ];
         });
     }
 

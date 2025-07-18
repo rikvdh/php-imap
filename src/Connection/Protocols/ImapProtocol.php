@@ -614,16 +614,6 @@ class ImapProtocol extends Protocol {
     }
 
     /**
-     * Reset the current stream and uid cache
-     *
-     * @return void
-     */
-    public function reset(): void {
-        $this->stream = null;
-        $this->uid_cache = [];
-    }
-
-    /**
      * Get an array of available capabilities
      *
      * @return Response list of capabilities
