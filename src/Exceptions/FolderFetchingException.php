@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class FolderFetchingException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class FolderFetchingException extends Exception {
+class FolderFetchingException extends BaseException {
 
 }

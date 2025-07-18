@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class GetMessagesFailedException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class ImapBadRequestException extends Exception {
+class ImapBadRequestException extends BaseException {
 
 }

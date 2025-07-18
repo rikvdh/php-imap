@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class MaskNotFoundException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class MaskNotFoundException extends Exception {
+class MaskNotFoundException extends BaseException {
 
 }

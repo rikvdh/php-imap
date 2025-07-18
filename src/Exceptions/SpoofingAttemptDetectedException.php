@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class SpoofingAttemptDetectedException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class SpoofingAttemptDetectedException extends Exception {
+class SpoofingAttemptDetectedException extends BaseException {
 
 }

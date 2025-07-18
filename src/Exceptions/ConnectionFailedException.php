@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class ConnectionFailedException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class ConnectionFailedException extends Exception {
+class ConnectionFailedException extends BaseException {
 
 }

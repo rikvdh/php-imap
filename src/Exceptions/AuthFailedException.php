@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class AuthFailedException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class AuthFailedException extends Exception {
+class AuthFailedException extends BaseException {
 
 }

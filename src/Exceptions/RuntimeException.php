@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class RuntimeException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class RuntimeException extends Exception {
+class RuntimeException extends BaseException {
 
 }

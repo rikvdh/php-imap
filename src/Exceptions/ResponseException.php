@@ -12,7 +12,7 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
+use Throwable;
 use Webklex\PHPIMAP\Connection\Protocols\Response;
 
 /**
@@ -20,17 +20,17 @@ use Webklex\PHPIMAP\Connection\Protocols\Response;
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class ResponseException extends Exception {
+class ResponseException extends BaseException {
 
     /**
      * Make a new ResponseException instance
      * @param Response $response
      * @param false|boolean $debug
-     * @param Exception|null $exception
+     * @param Throwable|null $exception
      *
      * @return ResponseException
      */
-    public static function make(Response $response, bool $debug = false, ?Exception $exception = null): ResponseException {
+    public static function make(Response $response, bool $debug = false, ?Throwable $exception = null): ResponseException {
         $message = "Command failed to process:\n";
         $message .= "Causes:\n";
 

@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class DecoderNotFoundException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class DecoderNotFoundException extends Exception {
+class DecoderNotFoundException extends BaseException {
 
 }

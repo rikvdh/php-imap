@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class MessageSizeFetchingException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class MessageSizeFetchingException extends Exception {
+class MessageSizeFetchingException extends BaseException {
 
 }

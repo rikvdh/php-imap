@@ -12,13 +12,11 @@
 
 namespace Webklex\PHPIMAP\Exceptions;
 
-use \Exception;
-
 /**
  * Class MethodNotFoundException
  *
  * @package Webklex\PHPIMAP\Exceptions
  */
-class MethodNotFoundException extends Exception {
+class MethodNotFoundException extends BaseException {
 
 }
