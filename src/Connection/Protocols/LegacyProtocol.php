@@ -122,6 +122,15 @@ class LegacyProtocol extends Protocol {
     }
 
     /**
+     * Check if the current session is connected
+     *
+     * @return bool
+     */
+    public function connected(): bool {
+        return (bool)$this->stream;
+    }
+
+    /**
      * Authenticate your current session.
      * @param string $user username
      * @param string $token access token

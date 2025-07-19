@@ -41,7 +41,7 @@ abstract class Protocol implements ProtocolInterface {
     /**
      * @var resource|false $stream
      */
-    public $stream = false;
+    protected $stream = false;
 
     /**
      * @var Config $config
@@ -358,14 +358,7 @@ abstract class Protocol implements ProtocolInterface {
         return $this->encryption;
     }
 
-    /**
-     * Check if the current session is connected
-     *
-     * @return bool
-     */
-    public function connected(): bool {
-        return (bool)$this->stream;
-    }
+    abstract public function connected():bool;
 
     /**
      * Retrieves header/metadata from the resource stream
