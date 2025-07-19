@@ -107,7 +107,7 @@ class ImapProtocol extends Protocol {
             try {
                 $this->requestAndResponse('NOOP');
                 return true;
-            } catch (ImapServerErrorException|RuntimeException) {
+            } catch (ImapServerErrorException|RuntimeException|EmptyResponseException) {
                 return false;
             }
         }
