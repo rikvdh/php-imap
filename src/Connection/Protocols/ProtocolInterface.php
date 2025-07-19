@@ -237,9 +237,8 @@ interface ProtocolInterface {
      * @param array|string $flags flags to set, add or remove
      * @param int $from message for items or start message if $to !== null
      * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                             last message, INF means last message available
+     *                             last message, PHP_INT_MAX means last message available
      * @param string|null $mode '+' to add flags, '-' to remove flags, everything else sets the flags as given
-     * @param bool $silent if false the return values are the new flags for the wanted messages
      * @param int|string $uid set to IMAP::ST_UID or any string representing the UID - set to IMAP::ST_MSGN to use
      * message numbers instead.
      * @param string|null $item command used to store a flag
@@ -247,19 +246,19 @@ interface ProtocolInterface {
      * @return Response containing the new flags if $silent is false, else true or false depending on success
      * @throws RuntimeException
      */
-    public function store(array|string $flags, int $from, ?int $to = null, ?string $mode = null, bool $silent = true, int|string $uid = IMAP::ST_UID, ?string $item = null): Response;
+    public function store(array|string $flags, int $from, ?int $to = null, ?string $mode = null, int|string $uid = IMAP::ST_UID, ?string $item = null): Response;
 
     /**
      * Append a new message to given folder
      * @param string $folder name of target folder
      * @param string $message full message content
-     * @param array|null $flags flags for new message
+     * @param array|string|null $flags flags for new message
      * @param string|null $date date for new message
      *
      * @return Response
      * @throws RuntimeException
      */
-    public function appendMessage(string $folder, string $message, ?array $flags = null, ?string $date = null): Response;
+    public function appendMessage(string $folder, string $message, array|string|null $flags = null, ?string $date = null): Response;
 
     /**
      * Copy message set from current folder to other folder
@@ -267,7 +266,7 @@ interface ProtocolInterface {
      * @param string $folder destination folder
      * @param $from
      * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                         last message, INF means last message available
+     *                         last message, PHP_INT_MAX means last message available
      * @param int|string $uid set to IMAP::ST_UID or any string representing the UID - set to IMAP::ST_MSGN to use
      * message numbers instead.
      *
@@ -293,7 +292,7 @@ interface ProtocolInterface {
      * @param string $folder destination folder
      * @param $from
      * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                         last message, INF means last message available
+     *                         last message, PHP_INT_MAX means last message available
      * @param int|string $uid set to IMAP::ST_UID or any string representing the UID - set to IMAP::ST_MSGN to use
      * message numbers instead.
      *

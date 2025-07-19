@@ -39,11 +39,6 @@ abstract class Protocol implements ProtocolInterface {
     protected bool $enable_uid_cache = true;
 
     /**
-     * @var resource|false $stream
-     */
-    protected $stream = false;
-
-    /**
      * @var Config $config
      */
     protected Config $config;
@@ -128,11 +123,10 @@ abstract class Protocol implements ProtocolInterface {
 
     /**
      * Set SSL certificate validation
-     * @param int $cert_validation
      *
-     * @return Protocol
+     * @return $this
      */
-    public function setCertValidation(int $cert_validation): Protocol {
+    public function setCertValidation(bool $cert_validation): Protocol {
         $this->cert_validation = !!$cert_validation;
         return $this;
     }
@@ -361,41 +355,6 @@ abstract class Protocol implements ProtocolInterface {
     abstract public function connected():bool;
 
     /**
-     * Retrieves header/metadata from the resource stream
-     *
-     * @return array
-     */
-    public function meta(): array {
-        if (!$this->stream) {
-            return [
-                "crypto"       => [
-                    "protocol"       => "",
-                    "cipher_name"    => "",
-                    "cipher_bits"    => 0,
-                    "cipher_version" => "",
-                ],
-                "timed_out"    => true,
-                "blocked"      => true,
-                "eof"          => true,
-                "stream_type"  => "tcp_socket/unknown",
-                "mode"         => "c",
-                "unread_bytes" => 0,
-                "seekable"     => false,
-            ];
-        }
-        return stream_get_meta_data($this->stream);
-    }
-
-    /**
-     * Get the resource stream
-     *
-     * @return mixed
-     */
-    public function getStream(): mixed {
-        return $this->stream;
-    }
-
-    /**
      * Set the Config instance
      *
      * @return Config
@@ -404,13 +363,5 @@ abstract class Protocol implements ProtocolInterface {
         return $this->config;
     }
 
-         /**
-     * Reset the current stream and uid cache
-     *
-     * @return void
-     */
-    public function reset(): void {
-        $this->stream = false;
-        $this->uid_cache = [];
-    }
+    abstract public function reset(): void;
 }

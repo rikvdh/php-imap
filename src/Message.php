@@ -128,6 +128,8 @@ class Message {
      */
     protected array $attributes = [];
 
+    private ?int $size = null;
+
     /**
      * The message folder path
      *
@@ -472,7 +474,7 @@ class Message {
      * @throws MessageSizeFetchingException
      */
     public function get($name): mixed {
-        if (isset($this->attributes[$name]) && $this->attributes[$name] !== null) {
+        if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
 
@@ -485,10 +487,10 @@ class Message {
                 $this->attributes[$name] = $this->client->getConnection()->getMessageNumber((string)$this->uid)->validate()->integer();
                 return $this->attributes[$name];
             case "size":
-                if (!isset($this->attributes[$name])) {
+                if (!isset($this->size)) {
                     $this->fetchSize();
                 }
-                return $this->attributes[$name];
+                return $this->size;
         }
         if (!$this->header) {
             return null;
@@ -669,7 +671,7 @@ class Message {
          if (!isset($sizes[$sequence_id])) {
             throw new MessageSizeFetchingException("sizes did not set an array entry for the supplied sequence_id", 0);
         }
-        $this->attributes["size"] = (int)$sizes[$sequence_id];
+        $this->size = (int)$sizes[$sequence_id];
     }
 
     /**
@@ -775,7 +777,7 @@ class Message {
         $subtype = strtolower($subtype);
         $subtype = $subtype == "plain" || $subtype == "" ? "text" : $subtype;
 
-        if (isset($this->bodies[$subtype]) && $this->bodies[$subtype] !== null && $this->bodies[$subtype] !== "") {
+        if (isset($this->bodies[$subtype]) && $this->bodies[$subtype] !== "") {
             if ($content !== "") {
                 $this->bodies[$subtype] .= "\n".$content;
             }
@@ -1176,7 +1178,7 @@ class Message {
         $flag = "\\" . trim(is_array($flag) ? implode(" \\", $flag) : $flag);
         $sequence_id = $this->getSequenceId();
         try {
-            $status = $this->client->getConnection()->store([$flag], $sequence_id, $sequence_id, "+", true, $this->sequence)->validatedData();
+            $status = $this->client->getConnection()->store([$flag], $sequence_id, $sequence_id, "+", $this->sequence)->validatedData();
         } catch (Exceptions\RuntimeException $e) {
             throw new MessageFlagException("flag could not be set", 0, $e);
         }
@@ -1207,7 +1209,7 @@ class Message {
         $flag = "\\" . trim(is_array($flag) ? implode(" \\", $flag) : $flag);
         $sequence_id = $this->getSequenceId();
         try {
-            $status = $this->client->getConnection()->store([$flag], $sequence_id, $sequence_id, "-", true, $this->sequence)->validatedData();
+            $status = $this->client->getConnection()->store([$flag], $sequence_id, $sequence_id, "-", $this->sequence)->validatedData();
         } catch (Exceptions\RuntimeException $e) {
             throw new MessageFlagException("flag could not be removed", 0, $e);
         }

@@ -173,14 +173,12 @@ class LegacyProtocol extends Protocol {
             if ($this->stream) {
                 $this->uid_cache = [];
                 $response->addCommand("imap_close");
-                if (\imap_close($this->stream, IMAP::CL_EXPUNGE)) {
-                    $this->stream = false;
-                    return [
-                        0 => "BYE Logging out\r\n",
-                        1 => "TAG" . $response->Noun() . " OK Logout completed (0.001 + 0.000 secs).\r\n",
-                    ];
-                }
+                \imap_close($this->stream, IMAP::CL_EXPUNGE);
                 $this->stream = false;
+                return [
+                    0 => "BYE Logging out\r\n",
+                    1 => "TAG" . $response->Noun() . " OK Logout completed (0.001 + 0.000 secs).\r\n",
+                ];
             }
             return [];
         });
@@ -409,7 +407,7 @@ class LegacyProtocol extends Protocol {
     public function getMessageNumber(string $id): Response {
         return $this->response("imap_msgno")->wrap(function($response) use ($id) {
             /** @var Response $response */
-            return \imap_msgno($this->stream, $id);
+            return \imap_msgno($this->stream, (int)$id);
         });
     }
 
@@ -418,7 +416,7 @@ class LegacyProtocol extends Protocol {
      * Get the next line from stream
      *
      * @return string next line
-     * @throws EmptyResponseException
+     * @throws InvalidArgumentException
      */
     public function nextLine(Response $response): string {
         throw new InvalidArgumentException();
@@ -465,42 +463,25 @@ class LegacyProtocol extends Protocol {
     }
 
     /**
-     * Manage flags
-     * @param array|string $flags flags to set, add or remove - see $mode
-     * @param int $from message for items or start message if $to !== null
-     * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                             last message, INF means last message available
-     * @param string|null $mode '+' to add flags, '-' to remove flags, everything else sets the flags as given
-     * @param bool $silent if false the return values are the new flags for the wanted messages
-     * @param int|string $uid set to IMAP::ST_UID if you pass message unique identifiers instead of numbers.
-     * @param string|null $item unused attribute
-     *
-     * @return Response new flags if $silent is false, else true or false depending on success
+     * @inheritdoc
      */
-    public function store(array|string $flags, int $from, ?int $to = null, ?string $mode = null, bool $silent = true, int|string $uid = IMAP::ST_UID, ?string $item = null): Response {
+    public function store(array|string $flags, int $from, ?int $to = null, ?string $mode = null, int|string $uid = IMAP::ST_UID, ?string $item = null): Response {
         $flag = trim(is_array($flags) ? implode(" ", $flags) : $flags);
 
-        return $this->response()->wrap(function($response) use ($mode, $from, $flag, $uid, $silent) {
+        return $this->response()->wrap(function($response) use ($mode, $from, $flag, $uid) {
             /** @var Response $response */
 
             if ($mode == "+") {
                 $response->addCommand("imap_setflag_full");
-                $status = \imap_setflag_full($this->stream, $from, $flag, $uid ? IMAP::ST_UID : IMAP::NIL);
+                \imap_setflag_full($this->stream, (string)$from, $flag, $uid ? IMAP::ST_UID : IMAP::NIL);
             } else {
                 $response->addCommand("imap_clearflag_full");
-                $status = \imap_clearflag_full($this->stream, $from, $flag, $uid ? IMAP::ST_UID : IMAP::NIL);
+                \imap_clearflag_full($this->stream, (string)$from, $flag, $uid ? IMAP::ST_UID : IMAP::NIL);
             }
 
-            if ($silent === true) {
-                if ($status) {
-                    return [
-                        "TAG" . $response->Noun() . " OK Store completed (0.001 + 0.000 secs).\r\n"
-                    ];
-                }
-                return [];
-            }
-
-            return $this->flags($from);
+            return [
+                "TAG" . $response->Noun() . " OK Store completed (0.001 + 0.000 secs).\r\n"
+            ];
         });
     }
 
@@ -508,12 +489,15 @@ class LegacyProtocol extends Protocol {
      * Append a new message to given folder
      * @param string $folder name of target folder
      * @param string $message full message content
-     * @param array|null $flags flags for new message
+     * @param array|string|null $flags flags for new message
      * @param mixed $date date for new message
      *
      * @return Response
      */
-    public function appendMessage(string $folder, string $message, ?array $flags = null, mixed $date = null): Response {
+    public function appendMessage(string $folder, string $message, array|string|null $flags = null, mixed $date = null): Response {
+        if (is_array($flags)) {
+            throw new InvalidArgumentException('forbidden array flags for imap implementation');
+        }
         return $this->response("imap_append")->wrap(function($response) use ($folder, $message, $flags, $date) {
             /** @var Response $response */
             if ($date != null) {
@@ -539,7 +523,7 @@ class LegacyProtocol extends Protocol {
      * @param string $folder destination folder
      * @param $from
      * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                         last message, INF means last message available
+     *                         last message, PHP_INT_MAX means last message available
      * @param int|string $uid set to IMAP::ST_UID if you pass message unique identifiers instead of numbers.
      *
      * @return Response
@@ -589,7 +573,7 @@ class LegacyProtocol extends Protocol {
      * @param string $folder destination folder
      * @param $from
      * @param int|null $to if null only one message ($from) is fetched, else it's the
-     *                         last message, INF means last message available
+     *                         last message, PHP_INT_MAX means last message available
      * @param int|string $uid set to IMAP::ST_UID if you pass message unique identifiers instead of numbers.
      *
      * @return Response success
@@ -844,5 +828,15 @@ class LegacyProtocol extends Protocol {
      */
     protected function response(?string $command = ""): Response {
         return Response::make(0, $command == "" ? [] : [$command], [], $this->debug);
+    }
+
+    /**
+     * Reset the current stream and uid cache
+     *
+     * @return void
+     */
+    public function reset(): void {
+        $this->stream = false;
+        $this->uid_cache = [];
     }
 }

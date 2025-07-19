@@ -316,11 +316,6 @@ class Folder {
 
     /**
      * Append a string message to the current mailbox
-     * @param string $message
-     * @param array|null $options
-     * @param string|Carbon|null $internal_date
-     *
-     * @return array
      * @throws ConnectionFailedException
      * @throws ImapBadRequestException
      * @throws ImapServerErrorException
@@ -328,7 +323,7 @@ class Folder {
      * @throws AuthFailedException
      * @throws ResponseException
      */
-    public function appendMessage(string $message, ?array $options = null, Carbon|string|null $internal_date = null): array {
+    public function appendMessage(string $message, string|array|null $options = null, Carbon|string|null $internal_date = null): array {
         /**
          * Check if $internal_date is parsed. If it is null it should not be set. Otherwise, the message can't be stored.
          * If this parameter is set, it will set the INTERNALDATE on the appended message. The parameter should be a
