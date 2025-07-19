@@ -251,6 +251,8 @@ class Header {
         $imap_headers = [];
         if (extension_loaded('imap') && $this->options["rfc822"]) {
             $raw_imap_headers = (array)\imap_rfc822_parse_headers($raw_headers);
+            // call imap-errors to flush out possible imap-errors..
+            \imap_errors();
             foreach ($raw_imap_headers as $key => $values) {
                 $key = strtolower(str_replace("-", "_", $key));
                 $imap_headers[$key] = $values;
