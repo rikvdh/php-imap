@@ -13,6 +13,7 @@
 
 namespace Webklex\PHPIMAP\Connection\Protocols;
 
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\ResponseException;
 
 /**
@@ -303,6 +304,7 @@ class Response {
      * Validate and retrieve the response data
      *
      * @throws ResponseException
+     * @throws EmptyResponseException
      */
     public function validatedData(): mixed {
         return $this->validate()->data();
@@ -312,6 +314,7 @@ class Response {
      * Validate the response date
      *
      * @throws ResponseException
+     * @throws EmptyResponseException
      */
     public function validate(): Response {
         if ($this->failed()) {

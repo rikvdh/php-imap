@@ -28,9 +28,9 @@ class ResponseException extends BaseException {
      * @param false|boolean $debug
      * @param Throwable|null $exception
      *
-     * @return ResponseException
+     * @return ResponseException|EmptyResponseException
      */
-    public static function make(Response $response, bool $debug = false, ?Throwable $exception = null): ResponseException {
+    public static function make(Response $response, bool $debug = false, ?Throwable $exception = null): BaseException {
         $message = "Command failed to process:\n";
         $message .= "Causes:\n";
 
@@ -39,7 +39,7 @@ class ResponseException extends BaseException {
         }
 
         if(!$response->data()) {
-            $message .= "\t- Empty response\n";
+            return new EmptyResponseException();
         }
 
         if ($debug) {
