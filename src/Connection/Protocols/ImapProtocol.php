@@ -796,7 +796,7 @@ class ImapProtocol extends Protocol {
         } elseif (is_array($from) && count($from) === 1) {
             $from = array_values($from);
             $set = $from[0] . ':' . $from[0];
-        } elseif ($to === null) {
+        } elseif ($to === null && is_int($from)) {
             $set = $from . ':' . $from;
         } elseif ($to == PHP_INT_MAX) {
             $set = $from . ':*';

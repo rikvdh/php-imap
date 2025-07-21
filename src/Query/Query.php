@@ -20,6 +20,7 @@ use ReflectionException;
 use Webklex\PHPIMAP\Client;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\EventNotFoundException;
 use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
 use Webklex\PHPIMAP\Exceptions\ImapBadRequestException;
@@ -416,7 +417,11 @@ class Query {
             $this->page = $start_chunk;
             $handled_messages_count = 0;
             do {
-                $messages = $this->populate($available_messages);
+                try {
+                    $messages = $this->populate($available_messages);
+                } catch (EmptyResponseException) {
+                    return;
+                }
                 $handled_messages_count += $messages->count();
                 $callback($messages, $this->page);
                 $this->page++;
