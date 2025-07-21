@@ -101,6 +101,8 @@ class ImapProtocol extends Protocol {
         return true;
     }
 
+    private $lastNoop = null;
+
     /**
      * Check if the current session is connected
      *
@@ -109,12 +111,16 @@ class ImapProtocol extends Protocol {
      */
     public function connected(): bool {
         if ((bool)$this->stream) {
-            try {
-                $this->requestAndResponse('NOOP');
-                return true;
-            } catch (ImapServerErrorException|RuntimeException|EmptyResponseException) {
-                return false;
+            if (!$this->lastNoop || $this->lastNoop != time()) {
+                $this->lastNoop = time();
+                try {
+                    $this->requestAndResponse('NOOP');
+                    return true;
+                } catch (ImapServerErrorException|RuntimeException|EmptyResponseException) {
+                    return false;
+                }
             }
+            return true;
         }
         return false;
     }
