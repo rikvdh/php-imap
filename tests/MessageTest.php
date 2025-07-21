@@ -32,6 +32,7 @@ use Webklex\PHPIMAP\Message;
 use Webklex\PHPIMAP\Connection\Protocols\ImapProtocol;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\ImapBadRequestException;
 use Webklex\PHPIMAP\Exceptions\ImapServerErrorException;
 use Webklex\PHPIMAP\Exceptions\MaskNotFoundException;
@@ -137,7 +138,7 @@ class MessageTest extends TestCase {
      * @throws ImapBadRequestException
      * @throws ImapServerErrorException
      * @throws MessageNotFoundException
-     * @throws ResponseException
+     * @throws EmptyResponseException
      * @throws RuntimeException
      */
     public function testGetMessageNumber(): void {
@@ -149,7 +150,7 @@ class MessageTest extends TestCase {
         try {
             $this->client->getConnection()->getMessageNumber(21)->validatedData();
             $this->fail("Message number should not exist");
-        } catch (ResponseException $e) {
+        } catch (EmptyResponseException $e) {
             self::assertTrue(true);
         }
 
