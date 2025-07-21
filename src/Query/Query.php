@@ -338,6 +338,7 @@ class Query {
      * @throws ImapBadRequestException
      * @throws ImapServerErrorException
      * @throws ReflectionException
+     * @throws EmptyResponseException
      * @throws RuntimeException
      * @throws ResponseException
      */
