@@ -387,48 +387,29 @@ class Query {
     }
 
     /**
-     * Fetch the current query as chunked requests
-     * @param callable $callback
-     * @param int $chunk_size
-     * @param int $start_chunk
      *
-     * @throws AuthFailedException
-     * @throws ConnectionFailedException
-     * @throws EventNotFoundException
+     * @param callable(MessageCollection $messsages, int $page): void $callback
+     * @param int $chunk_size
+     * @return void
      * @throws GetMessagesFailedException
+     * @throws AuthFailedException
      * @throws ImapBadRequestException
      * @throws ImapServerErrorException
-     * @throws ReflectionException
-     * @throws RuntimeException
      * @throws ResponseException
+     * @throws ConnectionFailedException
+     * @throws EventNotFoundException
+     * @throws ReflectionException
+     * @throws EmptyResponseException
+     * @throws RuntimeException
      */
-    public function chunked(callable $callback, int $chunk_size = 10, int $start_chunk = 1): void {
-        $start_chunk = max($start_chunk,1);
-        $chunk_size = max($chunk_size,1);
-        $skipped_messages_count = $chunk_size * ($start_chunk-1);
-
-        $available_messages = $this->search();
-        $available_messages_count = max($available_messages->count() - $skipped_messages_count,0);
-
-        if ($available_messages_count > 0) {
-            $old_limit = $this->limit;
-            $old_page = $this->page;
-
-            $this->limit = $chunk_size;
-            $this->page = $start_chunk;
-            $handled_messages_count = 0;
-            do {
-                try {
-                    $messages = $this->populate($available_messages);
-                } catch (EmptyResponseException) {
-                    return;
-                }
-                $handled_messages_count += $messages->count();
-                $callback($messages, $this->page);
-                $this->page++;
-            } while ($handled_messages_count < $available_messages_count);
-            $this->limit = $old_limit;
-            $this->page = $old_page;
+    public function chunked(callable $callback, int $chunk_size = 10): void
+    {
+        $messageChunks = $this->search()->chunk(max($chunk_size, 1));
+        $page = 0;
+        $this->page = 0;
+        foreach ($messageChunks as $chunk) {
+            $messages = $this->populate($chunk);
+            $callback($messages, $page++);
         }
     }
 
