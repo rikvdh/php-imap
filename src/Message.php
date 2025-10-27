@@ -21,6 +21,7 @@ use Webklex\PHPIMAP\Decoder\DecoderInterface;
 use Webklex\PHPIMAP\Exceptions\AuthFailedException;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
 use Webklex\PHPIMAP\Exceptions\DecoderNotFoundException;
+use Webklex\PHPIMAP\Exceptions\EmptyResponseException;
 use Webklex\PHPIMAP\Exceptions\EventNotFoundException;
 use Webklex\PHPIMAP\Exceptions\FolderFetchingException;
 use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
@@ -295,7 +296,11 @@ class Message {
                                  "message" => $client->getDefaultEvents("message"),
                                  "flag"    => $client->getDefaultEvents("flag"),
                              ]);
-        $instance->setFolderPath($client->getFolderPath());
+        $path = $client->getFolderPath();
+        if ($path === null) {
+            throw new EmptyResponseException('folder-path is empty');
+        }
+        $instance->setFolderPath($path);
         $instance->setSequence($sequence);
         $instance->setFetchOption($fetch_options);
 
@@ -1464,11 +1469,10 @@ class Message {
 
     /**
      * Set the message path aka folder path
-     * @param $folder_path
      *
      * @return Message
      */
-    public function setFolderPath($folder_path): Message {
+    public function setFolderPath(string $folder_path): Message {
         $this->folder_path = $folder_path;
 
         return $this;
