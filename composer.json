@@ -1,5 +1,5 @@
 {
-    "name": "webklex/php-imap",
+    "name": "rikvdh/php-imap",
     "type": "library",
     "description": "PHP IMAP client",
     "keywords": [
@@ -9,7 +9,7 @@
         "php-imap",
         "mail"
     ],
-    "homepage": "https://github.com/webklex/php-imap",
+    "homepage": "https://github.com/rikvdh/php-imap",
     "license": "MIT",
     "authors": [
         {
@@ -34,11 +34,10 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5.10",
         "phpstan/phpstan": "~2.0.0"
-
     },
     "suggest": {
         "symfony/mime": "Recomended for better extension support",
-        "symfony/var-dumper": "Usefull tool for debugging"
+        "symfony/var-dumper": "Useful tool for debugging"
     },
     "autoload": {
         "psr-4": {

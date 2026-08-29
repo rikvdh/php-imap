@@ -5,10 +5,8 @@
 [![Latest prerelease on Packagist][ico-prerelease]][link-packagist]
 [![Software License][ico-license]][link-license]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Hits][ico-hits]][link-hits]
-[![Discord][ico-discord]][link-discord]
-[![Snyk][ico-snyk]][link-snyk]
 
+Forked from Webklex/php-imap. More QA and fixes everywhere.
 
 ## Description
 PHP-IMAP is a wrapper for common IMAP communication without the need to have the php-imap module installed / enabled.
@@ -19,15 +17,10 @@ you want to use legacy protocols such as pop3.
 
 Official documentation: [php-imap.com](https://www.php-imap.com/)
 
-Laravel wrapper: [webklex/laravel-imap](https://github.com/Webklex/laravel-imap)
-
-Discord: [discord.gg/rd4cN9h6][link-discord]
-
 ## Table of Contents
 - [Documentations](#documentations)
 - [Compatibility](#compatibility)
 - [Basic usage example](#basic-usage-example)
-- [Sponsors](#sponsors)
 - [Testing](#testing)
 - [Known issues](#known-issues)
 - [Support](#support)
@@ -37,11 +30,9 @@ Discord: [discord.gg/rd4cN9h6][link-discord]
 - [Credits](#credits)
 - [License](#license)
 
-
 ## Documentations
-- Legacy (< v2.0.0): [legacy documentation](https://github.com/Webklex/php-imap/tree/1.4.5)
+- Legacy (< v2.0.0): [legacy documentation](https://github.com/rikvdh/php-imap/tree/1.4.5)
 - Core documentation: [php-imap.com](https://www.php-imap.com/)
-
 
 ## Compatibility
 | Version | PHP 5.6 | PHP 7 | PHP 8 |
@@ -82,13 +73,13 @@ foreach($folders as $folder){
     //Get all Messages of the current Mailbox $folder
     /** @var \Webklex\PHPIMAP\Support\MessageCollection $messages */
     $messages = $folder->messages()->all()->get();
-    
+
     /** @var \Webklex\PHPIMAP\Message $message */
     foreach($messages as $message){
         echo $message->getSubject().'<br />';
         echo 'Attachments: '.$message->getAttachments()->count().'<br />';
         echo $message->getHTMLBody();
-        
+
         //Move the current Message to 'INBOX.read'
         if($message->move('INBOX.read') == true){
             echo 'Message has been moved';
@@ -98,11 +89,6 @@ foreach($folders as $folder){
     }
 }
 ```
-
-## Sponsors
-[![elb-BIT][ico-sponsor-elb-bit]][link-sponsor-elb-bit]
-[![Feline][ico-sponsor-feline]][link-sponsor-feline]
-
 
 ## Testing
 To run the tests, please execute the following command:
@@ -165,7 +151,7 @@ docker stop imap-server
 
 
 ## Support
-If you encounter any problems or if you find a bug, please don't hesitate to create a new [issue](https://github.com/Webklex/php-imap/issues).
+If you encounter any problems or if you find a bug, please don't hesitate to create a new [issue](https://github.com/rikvdh/php-imap/issues).
 However, please be aware that it might take some time to get an answer.
 Off-topic, rude or abusive issues will be deleted without any notice.
 
@@ -173,7 +159,7 @@ If you need **commercial** support, feel free to send me a mail at github@webkle
 
 
 ##### A little notice
-If you write source code in your issue, please consider to format it correctly. This makes it so much nicer to read  
+If you write source code in your issue, please consider to format it correctly. This makes it so much nicer to read
 and people are more likely to comment and help :)
 
 &#96;&#96;&#96;php
@@ -183,20 +169,20 @@ echo 'your php code...';
 &#96;&#96;&#96;
 
 will turn into:
-```php 
-echo 'your php code...'; 
-``` 
+```php
+echo 'your php code...';
+```
 
 
 ## Features & pull requests
-Everyone can contribute to this project. Every pull request will be considered, but it can also happen to be declined.  
-To prevent unnecessary work, please consider to create a [feature issue](https://github.com/Webklex/php-imap/issues/new?template=feature_request.md)  
-first, if you're planning to do bigger changes. Of course, you can also create a new [feature issue](https://github.com/Webklex/php-imap/issues/new?template=feature_request.md)
+Everyone can contribute to this project. Every pull request will be considered, but it can also happen to be declined.
+To prevent unnecessary work, please consider to create a [feature issue](https://github.com/rikvdh/php-imap/issues/new?template=feature_request.md)
+first, if you're planning to do bigger changes. Of course, you can also create a new [feature issue](https://github.com/rikvdh/php-imap/issues/new?template=feature_request.md)
 if you're just wishing a feature ;)
 
 
 ## Alternatives & Different Flavors
-This library and especially the code flavor It's written in, is certainly not for everyone. If you are looking for a 
+This library and especially the code flavor It's written in, is certainly not for everyone. If you are looking for a
 different approach, you might want to check out the following libraries:
 - [ddeboer/imap](https://github.com/ddeboer/imap)
 - [barbushin/php-imap](https://github.com/barbushin/php-imap)
@@ -220,26 +206,14 @@ If you discover any security related issues, please email github@webklex.com ins
 The MIT License (MIT). Please see [License File][link-license] for more information.
 
 
-[ico-release]: https://img.shields.io/packagist/v/Webklex/php-imap.svg?style=flat-square&label=version
-[ico-prerelease]: https://img.shields.io/github/v/release/webklex/php-imap?include_prereleases&style=flat-square&label=pre-release
+[ico-release]: https://img.shields.io/packagist/v/rikvdh/php-imap.svg?style=flat-square&label=version
+[ico-prerelease]: https://img.shields.io/github/v/release/rikvdh/php-imap?include_prereleases&style=flat-square&label=pre-release
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/Webklex/php-imap.svg?style=flat-square
-[ico-hits]: https://hits.webklex.com/svg/webklex/php-imap
-[ico-snyk]: https://snyk-widget.herokuapp.com/badge/composer/webklex/php-imap/badge.svg
-[ico-discord]: https://img.shields.io/static/v1?label=discord&message=open&color=5865f2&style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/rikvdh/php-imap.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/Webklex/php-imap
-[link-downloads]: https://packagist.org/packages/Webklex/php-imap
-[link-author]: https://github.com/webklex
-[link-contributors]: https://github.com/Webklex/php-imap/graphs/contributors
-[link-license]: https://github.com/Webklex/php-imap/blob/master/LICENSE
-[link-changelog]: https://github.com/Webklex/php-imap/blob/master/CHANGELOG.md
-[link-hits]: https://hits.webklex.com
-[link-snyk]: https://snyk.io/vuln/composer:webklex%2Fphp-imap
-[link-discord]: https://discord.gg/vUHrbfbDr9
-
-
-[ico-sponsor-feline]: https://cdn.feline.dk/public/feline.png
-[link-sponsor-feline]: https://www.feline.dk
-[ico-sponsor-elb-bit]: https://www.elb-bit.de/user/themes/deliver/images/logo_small.png
-[link-sponsor-elb-bit]: https://www.elb-bit.de?ref=webklex/php-imap
+[link-packagist]: https://packagist.org/packages/rikvdh/php-imap
+[link-downloads]: https://packagist.org/packages/rikvdh/php-imap
+[link-author]: https://github.com/rikvdh
+[link-contributors]: https://github.com/rikvdh/php-imap/graphs/contributors
+[link-license]: https://github.com/rikvdh/php-imap/blob/master/LICENSE
+[link-changelog]: https://github.com/rikvdh/php-imap/blob/master/CHANGELOG.md
